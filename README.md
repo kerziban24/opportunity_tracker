@@ -53,6 +53,9 @@ tüm yeni fırsatları HTML e-posta olarak gönderir.
 Form aracılığıyla tetiklenir. Herhangi bir fırsatın
 durumunu günceller ve Telegram onayı gönderir.
 
+## Demo Video
+https://drive.google.com/drive/folders/1KuYNGtxmStAjl5HQcPMVi6fwW95rjtsN?usp=drive_link
+
 ## Dosya Yapısı
 📁 scholarship-opportunity-tracker
 ├── n8n_workflow_1_email_scanner.json
