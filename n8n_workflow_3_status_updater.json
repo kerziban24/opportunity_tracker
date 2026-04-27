@@ -1,0 +1,320 @@
+{
+  "name": "Opportunity Tracker - Update Status",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Opportunity Status Update",
+        "formDescription": "Update the status of an opportunity in your tracker",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "ID",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "New Status",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "bookmarked"
+                  },
+                  {
+                    "option": "applying"
+                  },
+                  {
+                    "option": "applied"
+                  },
+                  {
+                    "option": "rejected"
+                  },
+                  {
+                    "option": "irrelevant"
+                  },
+                  {
+                    "option": "new"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "4dadc0ed-8c75-480c-ac00-e66d4e581026",
+      "name": "On form submission",
+      "webhookId": "7b6b6ed8-37b3-4a69-b8c6-d987461f1da7"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1x44Ur3Tr4W4js1xXSA4GLBnoVTZif2zCSAp-wNC1hfw",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Opportunities",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "={{ $('On form submission').first().json['New Status'] }}",
+            "ID": "={{ Number($('On form submission').first().json['ID']) }}"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Date Found",
+              "displayName": "Date Found",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Organization",
+              "displayName": "Organization",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Type",
+              "displayName": "Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Deadline",
+              "displayName": "Deadline",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Location",
+              "displayName": "Location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Eligibility",
+              "displayName": "Eligibility",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Tags",
+              "displayName": "Tags",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email Hash",
+              "displayName": "Email Hash",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "classification",
+              "displayName": "classification",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "parseError",
+              "displayName": "parseError",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "emailId",
+              "displayName": "emailId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        256,
+        16
+      ],
+      "id": "f59335c8-8b20-4f4d-9235-7a5f60f80a27",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Izr4wWkqqw5KlUZc",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "8125132447",
+        "text": "=✅ Status Updated\n\n🆔 Opportunity ID: {{ $('On form submission').first().json['ID'] }}\n📊 New Status: {{ $('On form submission').first().json['New Status'] }}\n📝 Notes: {{ $('On form submission').first().json['Notes'] ?? 'None' }}\n\nYour sheet has been updated.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        496,
+        16
+      ],
+      "id": "7b5aec0a-d3b6-4f55-84eb-3b9042468658",
+      "name": "Send a text message",
+      "webhookId": "f95f97d6-39dc-4063-94d5-e74ded8b47ef",
+      "credentials": {
+        "telegramApi": {
+          "id": "iPROiFoufRtm1yZu",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "9a987e1b-26cd-41b2-8bc0-29bda6e8136c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7d4593fb967bba6519ce3304341cdfc06d639ac3f9947b9d423d89ece9233e44"
+  },
+  "id": "sGJQLxmfyJKPcjnX",
+  "tags": []
+}

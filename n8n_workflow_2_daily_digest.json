@@ -1,0 +1,372 @@
+{
+  "name": "Scholarship Tracker — Daily Digest",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * *"
+            }
+          ]
+        }
+      },
+      "name": "Every Day at 8am",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        -608,
+        0
+      ],
+      "id": "6647d927-0a9b-4152-b49c-94bcb601921e",
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1x44Ur3Tr4W4js1xXSA4GLBnoVTZif2zCSAp-wNC1hfw",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1603281670,
+          "mode": "list",
+          "cachedResultName": "Digest_Queue",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1x44Ur3Tr4W4js1xXSA4GLBnoVTZif2zCSAp-wNC1hfw/edit#gid=1603281670"
+        },
+        "filtersUI": {
+          "values": []
+        },
+        "options": {}
+      },
+      "name": "Get Unsent Queue Items",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        -384,
+        0
+      ],
+      "id": "b447c271-bf36-41bd-86e0-4e3a4e13f67f",
+      "typeVersion": 4.7,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Izr4wWkqqw5KlUZc",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a6c1c803-660e-43be-9a97-a4d636dff188",
+              "leftValue": "={{ $input.all().length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "name": "Any New Items?",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        64,
+        0
+      ],
+      "id": "409f0dc5-5be3-4d47-9fc0-fa9c75638020",
+      "typeVersion": 2.3
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $('Get Unsent Queue Items').all();\nconst today = new Date().toLocaleDateString('tr-TR', { \n  weekday: 'long', \n  year: 'numeric', \n  month: 'long', \n  day: 'numeric' \n});\n\nif (!items || items.length === 0) {\n  return [{ json: { html: '<p>Bugün yeni fırsat bulunamadı.</p>', count: 0, today } }];\n}\n\nlet rows = '';\nitems.forEach(item => {\n  const o = item.json;\n  const title = o['Title'] || o['title'] || 'Başlık yok';\n  const deadline = o['Deadline'] || o['deadline'] || 'Belirtilmemiş';\n  const type = o['Type'] || o['type'] || '';\n  const link = o['Link'] || o['link'] || '#';\n\n  rows += `\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #eee\">\n        <strong>${title}</strong><br>\n        <small style=\"color:#888\">${type}</small>\n      </td>\n      <td style=\"padding:12px;border-bottom:1px solid #eee;color:#e74c3c\">\n        ${deadline}\n      </td>\n      <td style=\"padding:12px;border-bottom:1px solid #eee\">\n        <a href=\"${link}\" style=\"background:#6c63ff;color:white;padding:6px 12px;border-radius:6px;text-decoration:none;font-size:13px\">Başvur →</a>\n      </td>\n    </tr>`;\n});\n\nconst html = `\n<html><body style=\"font-family:sans-serif;max-width:680px;margin:auto\">\n  <div style=\"background:#1a1a2e;padding:28px;text-align:center;border-radius:12px 12px 0 0\">\n    <h1 style=\"color:white;margin:0;font-size:22px\">🎓 Günlük Fırsat Özeti</h1>\n    <p style=\"color:rgba(255,255,255,0.6);margin:8px 0 0\">${today}</p>\n  </div>\n  <div style=\"background:#6c63ff;padding:10px;text-align:center\">\n    <span style=\"color:white;font-weight:600\">${items.length} yeni fırsat profilinizle eşleşti</span>\n  </div>\n  <div style=\"padding:24px;background:white\">\n    <table style=\"width:100%;border-collapse:collapse\">\n      <thead>\n        <tr style=\"background:#f8f9ff\">\n          <th style=\"padding:10px;text-align:left;font-size:12px;color:#888;text-transform:uppercase\">Fırsat</th>\n          <th style=\"padding:10px;text-align:left;font-size:12px;color:#888;text-transform:uppercase\">Son Tarih</th>\n          <th style=\"padding:10px;text-align:left;font-size:12px;color:#888;text-transform:uppercase\">Link</th>\n        </tr>\n      </thead>\n      <tbody>${rows}</tbody>\n    </table>\n  </div>\n  <div style=\"background:#f8f9ff;padding:16px;text-align:center;border-radius:0 0 12px 12px\">\n    <p style=\"color:#aaa;font-size:12px;margin:0\">Fırsat Takip Sistemi · n8n + Gemini AI</p>\n  </div>\n</body></html>`;\n\nreturn [{ json: { html, count: items.length, today } }];"
+      },
+      "name": "Build Digest Email",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        288,
+        0
+      ],
+      "id": "905b3001-7d92-4a5f-a0a2-13a18b71c429",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "sendTo": "yzta2026@gmail.com",
+        "subject": "=🎓 {{ $json.count }} Yeni Fırsat — {{ $json.today }}",
+        "message": "={{ $json.html }}",
+        "options": {}
+      },
+      "name": "Send Digest Email",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        512,
+        0
+      ],
+      "id": "4fb91486-54ae-47c1-b185-436004014f39",
+      "typeVersion": 2.2,
+      "webhookId": "8299e719-2cff-4c8b-935e-9b23db8af9ac",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "tyNlsoPtJpDHGD6w",
+          "name": "Gmail account"
+        }
+      },
+      "notes": "SETUP: Replace YOUR_EMAIL_ADDRESS_HERE with your email."
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $('Get Unsent Queue Items').all();\n\n// Her item için ayrı ayrı döndür, title boş olanları atla\nconst result = items\n  .filter(item => item.json['Title'] && item.json['Title'] !== '')\n  .map(item => ({\n    json: {\n      matchValue: item.json['Title'],\n      opportunityId: item.json['Opportunity ID']\n    }\n  }));\n\nif (result.length === 0) {\n  return [{ json: { matchValue: 'NO_MATCH', opportunityId: '' } }];\n}\n\nreturn result;"
+      },
+      "name": "Prepare Update Data",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        736,
+        0
+      ],
+      "id": "1600b5df-0cd4-4d7b-ac48-a3b1922d1336",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "const allRows = $input.all();\n\nconst unsent = allRows.filter(row => {\n  const sent = row.json['Sent?'];\n  return sent === false || \n         sent === 'FALSE' || \n         sent === 'false' || \n         sent === 'False' ||\n         sent === '' ||\n         sent === undefined ||\n         sent === null;\n});\n\nreturn unsent;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -160,
+        0
+      ],
+      "id": "ce3e4796-f84f-49ba-9b28-b1cfe10fd653",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1x44Ur3Tr4W4js1xXSA4GLBnoVTZif2zCSAp-wNC1hfw",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Digest_Queue",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Sent?": "TRUE",
+            "Title": "={{ $json.matchValue }}"
+          },
+          "matchingColumns": [
+            "Title"
+          ],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Opportunity ID ",
+              "displayName": "Opportunity ID ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Deadline",
+              "displayName": "Deadline",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Type",
+              "displayName": "Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Sent?",
+              "displayName": "Sent?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "sent_status",
+              "displayName": "sent_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "name": "Mark as Sent",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        960,
+        0
+      ],
+      "id": "79fc2ecd-a614-4bf4-ba25-09d60112856a",
+      "typeVersion": 4.7,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Izr4wWkqqw5KlUZc",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Every Day at 8am": {
+      "main": [
+        [
+          {
+            "node": "Get Unsent Queue Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Unsent Queue Items": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Any New Items?": {
+      "main": [
+        [
+          {
+            "node": "Build Digest Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Digest Email": {
+      "main": [
+        [
+          {
+            "node": "Send Digest Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Digest Email": {
+      "main": [
+        [
+          {
+            "node": "Prepare Update Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Update Data": {
+      "main": [
+        [
+          {
+            "node": "Mark as Sent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Any New Items?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "f6fcbb5b-0011-4f34-a49e-696552205b19",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7d4593fb967bba6519ce3304341cdfc06d639ac3f9947b9d423d89ece9233e44"
+  },
+  "id": "Ludy0sWz9ueyEnCe",
+  "tags": []
+}
