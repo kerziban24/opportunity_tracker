@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistem Mimarisi</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #070a0f;
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 2.5rem 1rem 3rem;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(78,168,255,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(78,168,255,.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+  }
+
+  .page { max-width: 900px; width: 100%; position: relative; z-index: 1; }
+
+  /* header */
+  .header { text-align: center; margin-bottom: 3.5rem; }
+  .header-tag {
+    display: inline-block;
+    border: 1px solid rgba(78,168,255,.3);
+    color: #4ea8ff;
+    font-size: .65rem; letter-spacing: .25em;
+    padding: .3rem 1.2rem; border-radius: 99px;
+    margin-bottom: 1rem;
+    background: rgba(78,168,255,.05);
+  }
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 800; color: #fff; line-height: 1.05;
+    letter-spacing: -.02em;
+  }
+  h1 span { color: #4ea8ff; }
+  .header-sub { color: #2e3650; font-size: .75rem; margin-top: .6rem; letter-spacing: .08em; }
+
+  /* diagram wrapper */
+  .diagram {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* section label */
+  .sec {
+    font-family: 'Syne', sans-serif;
+    font-size: .6rem; font-weight: 700;
+    letter-spacing: .2em; color: #1e2a42;
+    text-align: center; margin-bottom: .6rem;
+  }
+
+  /* node */
+  .node {
+    background: linear-gradient(135deg, #0d1320 0%, #0a0f1a 100%);
+    border: 1px solid var(--c, #1e2740);
+    border-radius: 14px;
+    padding: 1.1rem 1.4rem;
+    text-align: center;
+    min-width: 130px;
+    position: relative;
+    transition: transform .25s ease, box-shadow .25s ease;
+    cursor: default;
+  }
+  .node:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px var(--glow, rgba(78,168,255,.1));
+  }
+  .node-icon { font-size: 1.8rem; display: block; margin-bottom: .5rem; line-height: 1; }
+  .node-name {
+    font-family: 'Syne', sans-serif;
+    font-size: .82rem; font-weight: 700;
+    color: #fff; display: block; margin-bottom: .25rem;
+  }
+  .node-desc { font-size: .62rem; color: #3a4560; display: block; line-height: 1.5; }
+
+  /* colors */
+  .c-gmail    { --c: rgba(234,67,53,.25);   --glow: rgba(234,67,53,.12); }
+  .c-n8n      { --c: rgba(255,109,58,.25);  --glow: rgba(255,109,58,.12); }
+  .c-gemini   { --c: rgba(78,168,255,.25);  --glow: rgba(78,168,255,.12); }
+  .c-sheets   { --c: rgba(6,214,160,.25);   --glow: rgba(6,214,160,.12); }
+  .c-calendar { --c: rgba(66,133,244,.25);  --glow: rgba(66,133,244,.12); }
+  .c-sites    { --c: rgba(255,209,102,.25); --glow: rgba(255,209,102,.12); }
+  .c-digest   { --c: rgba(185,122,255,.25); --glow: rgba(185,122,255,.12); }
+
+  /* icon colors */
+  .c-gmail    .node-name { color: #ea4335; }
+  .c-n8n      .node-name { color: #ff6d3a; }
+  .c-gemini   .node-name { color: #4ea8ff; }
+  .c-sheets   .node-name { color: #06d6a0; }
+  .c-calendar .node-name { color: #4285f4; }
+  .c-sites    .node-name { color: #ffd166; }
+  .c-digest   .node-name { color: #b97aff; }
+
+  /* horizontal row */
+  .h-row {
+    display: flex; align-items: center;
+    justify-content: center; gap: .6rem;
+  }
+
+  /* h arrow */
+  .h-arr {
+    display: flex; flex-direction: column; align-items: center; gap: .25rem;
+  }
+  .h-arr-line {
+    width: 44px; height: 2px;
+    background: linear-gradient(90deg, #1a2235, #2a3a58);
+    position: relative;
+  }
+  .h-arr-line::after {
+    content: '';
+    position: absolute; right: -5px; top: -4px;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 7px solid #2a3a58;
+  }
+  .h-arr-label { font-size: .58rem; color: #1e2a42; white-space: nowrap; }
+
+  /* v arrow */
+  .v-arr {
+    display: flex; flex-direction: column; align-items: center;
+    margin: .4rem 0; gap: .3rem;
+  }
+  .v-arr-line {
+    width: 2px; height: 36px;
+    background: linear-gradient(180deg, #1a2235, #2a3a58);
+    position: relative;
+  }
+  .v-arr-line::after {
+    content: '';
+    position: absolute; bottom: -5px; left: -4px;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 7px solid #2a3a58;
+  }
+  .v-arr-label { font-size: .58rem; color: #1e2a42; }
+
+  /* fan SVG */
+  .fan { width: 100%; max-width: 720px; margin: .2rem auto; }
+  .fan svg { display: block; width: 100%; }
+
+  /* output row */
+  .out-row {
+    display: flex; align-items: flex-start;
+    justify-content: center; gap: 1.2rem;
+    flex-wrap: wrap; width: 100%;
+  }
+
+  /* flow label on connector */
+  .flow-badge {
+    background: #0d1320;
+    border: 1px solid #1e2740;
+    border-radius: 99px;
+    padding: .15rem .6rem;
+    font-size: .58rem; color: #2e3a55;
+    white-space: nowrap;
+  }
+
+  /* bottom legend */
+  .legend {
+    display: flex; gap: 1.2rem; flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #0d1320;
+  }
+  .leg { display: flex; align-items: center; gap: .4rem; font-size: .65rem; color: #2e3a55; }
+  .leg-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+  /* entrance animations */
+  .node { animation: rise .5s ease both; }
+  @keyframes rise {
+    from { opacity:0; transform: translateY(12px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+  .node:nth-child(1) { animation-delay: .05s; }
+  .node:nth-child(2) { animation-delay: .15s; }
+  .node:nth-child(3) { animation-delay: .25s; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="header-tag">MİMARİ DİYAGRAM</div>
+    <h1>Opportunity Tracker<br><span>Sistem Akışı</span></h1>
+    <div class="header-sub">// otomatik fırsat tespit & takip sistemi</div>
+  </div>
+
+  <div class="diagram">
+
+    <!-- 1: Gmail -->
+    <div class="sec">GİRDİ</div>
+    <div class="h-row">
+      <div class="node c-gmail">
+        <span class="node-icon">📧</span>
+        <span class="node-name">Gmail</span>
+        <span class="node-desc">Burs & staj<br>e-postaları</span>
+      </div>
+    </div>
+
+    <div class="v-arr">
+      <div class="v-arr-line"></div>
+      <span class="flow-badge">otomatik tarama · 15 dk</span>
+    </div>
+
+    <!-- 2: n8n + Gemini -->
+    <div class="sec">OTOMASYON & ANALİZ</div>
+    <div class="h-row">
+      <div class="node c-n8n">
+        <span class="node-icon">⚙️</span>
+        <span class="node-name">n8n Workflow</span>
+        <span class="node-desc">E-posta tarayıcı<br>otomasyon motoru</span>
+      </div>
+      <div class="h-arr">
+        <div class="h-arr-line"></div>
+        <span class="h-arr-label">içerik iletir</span>
+      </div>
+      <div class="node c-gemini">
+        <span class="node-icon">🤖</span>
+        <span class="node-name">Gemini AI</span>
+        <span class="node-desc">Fırsatları tespit eder<br>JSON üretir</span>
+      </div>
+    </div>
+
+    <div class="v-arr">
+      <div class="v-arr-line"></div>
+      <span class="flow-badge">yapılandırılmış veri</span>
+    </div>
+
+    <!-- 3: Sheets -->
+    <div class="sec">VERİ DEPOSU</div>
+    <div class="h-row">
+      <div class="node c-sheets" style="min-width:170px">
+        <span class="node-icon">📊</span>
+        <span class="node-name">Google Sheets</span>
+        <span class="node-desc">Opportunity Tracker · Ana veritabanı<br>tüm fırsatlar burada saklanır</span>
+      </div>
+    </div>
+
+    <!-- fan -->
+    <div class="fan">
+      <svg viewBox="0 0 700 56" preserveAspectRatio="xMidYMid meet" height="56">
+        <defs>
+          <marker id="a" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto">
+            <path d="M0,0 L0,7 L7,3.5 z" fill="#2a3a58"/>
+          </marker>
+        </defs>
+        <path d="M350,0 C350,28 140,28 140,56" stroke="#1e2a3c" stroke-width="1.5" fill="none" marker-end="url(#a)"/>
+        <path d="M350,0 L350,56"               stroke="#1e2a3c" stroke-width="1.5" fill="none" marker-end="url(#a)"/>
+        <path d="M350,0 C350,28 560,28 560,56" stroke="#1e2a3c" stroke-width="1.5" fill="none" marker-end="url(#a)"/>
+      </svg>
+    </div>
+
+    <!-- 4: Outputs -->
+    <div class="sec">ÇIKTILAR</div>
+    <div class="out-row">
+      <div class="node c-calendar" style="min-width:140px">
+        <span class="node-icon">📅</span>
+        <span class="node-name">Google Calendar</span>
+        <span class="node-desc">Deadline tarihleri<br>otomatik eklenir</span>
+      </div>
+      <div class="node c-sites" style="min-width:140px">
+        <span class="node-icon">🌐</span>
+        <span class="node-name">Google Sites</span>
+        <span class="node-desc">Canlı dashboard<br>herkese açık görünüm</span>
+      </div>
+      <div class="node c-digest" style="min-width:140px">
+        <span class="node-icon">📨</span>
+        <span class="node-name">Günlük Özet</span>
+        <span class="node-desc">n8n Workflow 2<br>otomatik e-posta</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- legend -->
+  <div class="legend">
+    <div class="leg"><div class="leg-dot" style="background:#ea4335"></div>Gmail</div>
+    <div class="leg"><div class="leg-dot" style="background:#ff6d3a"></div>n8n</div>
+    <div class="leg"><div class="leg-dot" style="background:#4ea8ff"></div>Gemini AI</div>
+    <div class="leg"><div class="leg-dot" style="background:#06d6a0"></div>Google Sheets</div>
+    <div class="leg"><div class="leg-dot" style="background:#4285f4"></div>Google Calendar</div>
+    <div class="leg"><div class="leg-dot" style="background:#ffd166"></div>Google Sites</div>
+    <div class="leg"><div class="leg-dot" style="background:#b97aff"></div>E-posta Digest</div>
+  </div>
+
+</div>
+</body>
+</html>
