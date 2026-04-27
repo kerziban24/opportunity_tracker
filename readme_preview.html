@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Opportunities AI — README</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: #F7F9FC;
+    color: #1A202C;
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 40px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+
+  /* Header */
+  .hero {
+    background: linear-gradient(135deg, #1A237E 0%, #283593 50%, #1565C0 100%);
+    padding: 3rem 3rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle at 80% 20%, rgba(100,150,255,0.15) 0%, transparent 60%);
+  }
+  .hero-tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #90CAF9;
+    font-size: 0.7rem;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.15em;
+    padding: 0.3rem 1rem;
+    border-radius: 99px;
+    margin-bottom: 1.2rem;
+  }
+  .hero h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 0.6rem;
+  }
+  .hero h1 span { color: #64B5F6; }
+  .hero p {
+    color: #90CAF9;
+    font-size: 0.95rem;
+    font-weight: 300;
+  }
+  .hero-badges {
+    display: flex; gap: 0.6rem; margin-top: 1.5rem; flex-wrap: wrap;
+  }
+  .badge {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #E3F2FD;
+    font-size: 0.75rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 99px;
+  }
+
+  /* Body */
+  .body { padding: 2.5rem 3rem; }
+
+  /* Dashboard link */
+  .dashboard-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: linear-gradient(135deg, #E8F5E9, #F1F8E9);
+    border: 1.5px solid #A5D6A7;
+    border-radius: 14px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 2.5rem;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .dashboard-link:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(76,175,80,0.15); }
+  .dashboard-icon { font-size: 2rem; }
+  .dashboard-text strong { display: block; color: #2E7D32; font-size: 0.95rem; margin-bottom: 0.2rem; }
+  .dashboard-text span { color: #43A047; font-size: 0.82rem; font-family: 'JetBrains Mono', monospace; }
+  .dashboard-arrow { margin-left: auto; color: #4CAF50; font-size: 1.3rem; }
+
+  /* Section titles */
+  h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1A237E;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  h2::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, #E8EAF6, transparent);
+    margin-left: 0.5rem;
+  }
+
+  /* Steps */
+  .steps { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 2.5rem; }
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 0.9rem 1.2rem;
+    background: #F8FAFF;
+    border-radius: 12px;
+    border-left: 3px solid #C5CAE9;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .step:hover { border-color: #3F51B5; background: #ECEEFF; }
+  .step-num {
+    background: #3F51B5;
+    color: white;
+    font-size: 0.72rem;
+    font-weight: 700;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .step-title { font-weight: 600; font-size: 0.9rem; color: #283593; margin-bottom: 0.2rem; }
+  .step-desc { font-size: 0.82rem; color: #607D8B; line-height: 1.5; }
+
+  /* Tools grid */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.8rem;
+    margin-bottom: 2.5rem;
+  }
+  .tool-card {
+    background: #F8FAFF;
+    border: 1px solid #E8EAF6;
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .tool-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(63,81,181,0.1); }
+  .tool-icon { font-size: 1.5rem; }
+  .tool-name { font-weight: 600; font-size: 0.85rem; color: #283593; }
+  .tool-desc { font-size: 0.75rem; color: #90A4AE; }
+
+  /* Diagram */
+  .diagram-box {
+    background: #F0F4FF;
+    border: 1px solid #C5CAE9;
+    border-radius: 14px;
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
+    text-align: center;
+  }
+  .diagram-box img { width: 100%; border-radius: 8px; }
+
+  /* Team */
+  .team {
+    background: linear-gradient(135deg, #F3E5F5, #EDE7F6);
+    border: 1px solid #CE93D8;
+    border-radius: 14px;
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .team-members { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+  .member {
+    background: #fff;
+    border: 1px solid #CE93D8;
+    border-radius: 99px;
+    padding: 0.35rem 1rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #6A1B9A;
+  }
+  .team-year { font-size: 0.8rem; color: #9C27B0; font-family: 'JetBrains Mono', monospace; }
+
+  /* divider */
+  .divider { height: 1px; background: #EEF2FF; margin: 2rem 0; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <div class="hero-tag">PROJE README</div>
+    <h1>🎓 Opportunities AI<br><span>Burs Takip Sistemi</span></h1>
+    <p>Gmail'i otomatik tarayan, yapay zeka ile analiz eden ve kişiselleştirilmiş bildirimler gönderen otomasyon sistemi.</p>
+    <div class="hero-badges">
+      <span class="badge">⚙️ n8n</span>
+      <span class="badge">🤖 Gemini AI</span>
+      <span class="badge">📊 Google Sheets</span>
+      <span class="badge">📅 Google Calendar</span>
+      <span class="badge">📱 Telegram</span>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- Dashboard -->
+    <a class="dashboard-link" href="https://sites.google.com/view/opportunitydashboard?usp=sharing" target="_blank">
+      <div class="dashboard-icon">🌐</div>
+      <div class="dashboard-text">
+        <strong>Canlı Dashboard'u Görüntüle</strong>
+        <span>sites.google.com/view/opportunitydashboard</span>
+      </div>
+      <div class="dashboard-arrow">→</div>
+    </a>
+
+    <!-- Diagram -->
+    <h2>🗺️ Sistem Mimarisi</h2>
+    <div class="diagram-box">
+      <img src="mimari_diyagram.png" alt="Sistem Mimarisi" onerror="this.parentElement.innerHTML='<p style=color:#90A4AE;padding:2rem>Görsel: mimari_diyagram.png</p>'"/>
+    </div>
+
+    <!-- Steps -->
+    <h2>🔍 Nasıl Çalışır?</h2>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div><div class="step-title">Gmail Tarama</div><div class="step-desc">Gmail her 15 dakikada bir bursla ilgili yeni e-postalar için taranır.</div></div></div>
+      <div class="step"><div class="step-num">2</div><div><div class="step-title">Tekrar Kontrolü</div><div class="step-desc">Her e-posta için hash oluşturularak aynı e-postanın tekrar işlenmesi engellenir.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div><div class="step-title">Kullanıcı Profili Eşleştirme</div><div class="step-desc">Sonuçları kişiselleştirmek için Google Sheets'ten kullanıcı profili çekilir.</div></div></div>
+      <div class="step"><div class="step-num">4</div><div><div class="step-title">Gemini AI Analizi</div><div class="step-desc">E-posta içeriği Google Gemini AI'ya gönderilerek alakalılık ve önemli bilgiler çıkarılır.</div></div></div>
+      <div class="step"><div class="step-num">5</div><div><div class="step-title">Alakalılık Filtresi</div><div class="step-desc">Yalnızca ilgili burslar bir sonraki adıma geçer.</div></div></div>
+      <div class="step"><div class="step-num">6</div><div><div class="step-title">Son Tarih Tespiti</div><div class="step-desc">Fırsatın yaklaşan bir son tarihi olup olmadığı kontrol edilir.</div></div></div>
+      <div class="step"><div class="step-num">7</div><div><div class="step-title">Google Sheets Kaydı</div><div class="step-desc">Tüm ilgili burslar takip tablosuna kaydedilir.</div></div></div>
+      <div class="step"><div class="step-num">8</div><div><div class="step-title">Telegram Bildirimi</div><div class="step-desc">Kullanıcıya Telegram üzerinden anında bildirim gönderilir.</div></div></div>
+      <div class="step"><div class="step-num">9</div><div><div class="step-title">Google Takvim</div><div class="step-desc">Son tarih hatırlatıcıları otomatik olarak takvime eklenir.</div></div></div>
+      <div class="step"><div class="step-num">10</div><div><div class="step-title">Haftalık Özet</div><div class="step-desc">Fırsatlar inceleme için haftalık özet sayfasına eklenir.</div></div></div>
+    </div>
+
+    <!-- Tools -->
+    <h2>🛠️ Kullanılan Araçlar</h2>
+    <div class="tools-grid">
+      <div class="tool-card"><div class="tool-icon">⚙️</div><div><div class="tool-name">n8n</div><div class="tool-desc">İş akışı otomasyonu</div></div></div>
+      <div class="tool-card"><div class="tool-icon">📧</div><div><div class="tool-name">Gmail</div><div class="tool-desc">E-posta kaynağı</div></div></div>
+      <div class="tool-card"><div class="tool-icon">🤖</div><div><div class="tool-name">Gemini AI</div><div class="tool-desc">Alakalılık analizi</div></div></div>
+      <div class="tool-card"><div class="tool-icon">📊</div><div><div class="tool-name">Google Sheets</div><div class="tool-desc">Veri depolama</div></div></div>
+      <div class="tool-card"><div class="tool-icon">📅</div><div><div class="tool-name">Google Calendar</div><div class="tool-desc">Deadline hatırlatıcıları</div></div></div>
+      <div class="tool-card"><div class="tool-icon">🌐</div><div><div class="tool-name">Google Sites</div><div class="tool-desc">Dashboard gösterimi</div></div></div>
+      <div class="tool-card"><div class="tool-icon">📱</div><div><div class="tool-name">Telegram</div><div class="tool-desc">Anlık bildirimler</div></div></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Team -->
+    <h2>👥 Ekip</h2>
+    <div class="team">
+      <div class="team-members">
+        <span class="member">Kerziban Sicim</span>
+        <span class="member">İlayda Yılmaz</span>
+        <span class="member">Hayrunnisa Yavuz</span>
+      </div>
+      <div class="team-year">© 2026 Opportunities AI</div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>
